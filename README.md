@@ -24,14 +24,9 @@ The website transforms Terra’s 25-year journey into an immersive **AI-powered 
 
 ---
 
-## Demo
-<p align="center">
-  <a href="https://fascinating-terra-2025.netlify.app/" target="_blank">
-    <video autoplay loop muted playsinline width="700" style="border-radius: 12px;">
-      <source src="Demo.mp4" type="video/mp4">bbb
-    </video>
-  </a>
-</p>
+## [Live Website](https://fascinating-terra-2025.netlify.app/)
+
+
 
 
 
@@ -110,7 +105,7 @@ All scientific information belongs to **NASA Earth Science Division** and associ
 - [Blesson James Abraham](https://github.com/blesson2000)
 - [Ashirvad Rajesh](https://github.com/Dxace21)
 - [Albin Joesph Varghese](https://github.com/ALBIN-JOSEPH7)
-- [Rishi Raj D](https://github.com/Devmjohn/Terra-s-25th-Anniversary-Celebration-)
+- [Rishi Raj D](https://github.com/Black-star-chaser)
 - [Nanditha A](https://github.com/nandithaaswathy)
 
 **Team Name:** [META GALACTIC](https://www.spaceappschallenge.org/2025/find-a-team/meta-galactic/)
