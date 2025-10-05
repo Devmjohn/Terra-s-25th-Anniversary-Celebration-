@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpg" href="fav.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terra Sensors — Flashcards</title>
+    <style>
+      :root {
+        --blue: #0e4c92;
+        --yellow: #fee12b;
+        --glass: rgba(255, 255, 255, 0.05);
+        --card-w: 260px;
+        --card-h: 400px;
+        --radius: 16px;
+        font-family: "Inter", ui-sans-serif, system-ui, -apple-system,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        color: #f1f5f9;
+        background: var(--blue);
+      }
+
+      /* Loading overlay */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(14, 76, 146, 0.9);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .loading-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--yellow);
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Header Navigation */
+      .nav-header {
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(14, 76, 146, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 2px solid rgba(254, 225, 43, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-title {
+        font-size: 1.5rem;
+        color: var(--yellow);
+        font-weight: 700;
+      }
+
+      .back-home-btn {
+        background: var(--yellow);
+        color: var(--blue);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .back-home-btn:hover {
+        background: #ffd700;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(254, 225, 43, 0.4);
+      }
+
+      section.flashcards {
+        padding: 80px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      section.flashcards h2 {
+        font-size: 2rem;
+        color: var(--yellow);
+        margin-bottom: 10px;
+      }
+
+      section.flashcards p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+        max-width: 600px;
+      }
+
+      /* Grid */
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: stretch;
+        justify-content: center;
+        width: 100%;
+        max-width: 1400px;
+      }
+
+      /* Card */
+      .card {
+        perspective: 1200px;
+        width: 100%;
+        max-width: var(--card-w);
+        height: var(--card-h);
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.7s cubic-bezier(0.2, 0.9, 0.2, 1);
+        border-radius: var(--radius);
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .card:hover .inner {
+        transform: rotateY(180deg);
+      }
+
+      .card.is-flipped .inner {
+        transform: rotateY(180deg);
+      }
+
+      .side {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 18px;
+        backface-visibility: hidden;
+        background: var(--glass);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+      }
+
+      .front {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.08),
+          rgba(255, 255, 255, 0.02)
+        );
+      }
+
+      .back {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02)
+        );
+        transform: rotateY(180deg);
+      }
+
+      .icon {
+        font-size: 36px;
+        background: rgba(255, 255, 255, 0.1);
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+
+      .title {
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--yellow);
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .content {
+        font-size: 14px;
+        color: #f1f5f9;
+        line-height: 1.5;
+      }
+
+      .fact {
+        color: var(--yellow);
+        font-weight: 600;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+
+      /* Learn More Button */
+      .learn-more-btn {
+        background: var(--yellow);
+        color: var(--blue);
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(254, 225, 43, 0.3);
+        width: 100%;
+        margin-top: 12px;
+      }
+
+      .learn-more-btn:hover {
+        background: #ffd700;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(254, 225, 43, 0.4);
+      }
+
+      .learn-more-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .grid {
+          max-width: 900px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-header {
+          padding: 15px 20px;
+        }
+
+        .nav-title {
+          font-size: 1.2rem;
+        }
+
+        .grid {
+          gap: 20px;
+        }
+      }
+
+      @media (max-width: 540px) {
+        :root {
+          --card-w: 90vw;
+          --card-h: 400px;
+        }
+        section.flashcards h2 {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <p>Loading sensor details...</p>
+    </div>
+
+    <!-- Navigation Header -->
+    <div class="nav-header">
+      <div class="nav-title">Terra Sensors</div>
+      <a href="index.html" class="back-home-btn">← Back to Home</a>
+    </div>
+
+    <!-- Flashcard Section -->
+    <section class="flashcards">
+      <h2>Explore Terra's Instruments</h2>
+      <p>
+        Hover over cards to see details, then click "Learn More" to explore each
+        sensor in depth.
+      </p>
+
+      <div class="grid" id="grid">
+        <!-- MODIS -->
+        <article class="card" data-sensor="modis">
+          <div
+            class="inner"
+            tabindex="0"
+            role="button"
+            aria-label="Flip MODIS card"
+          >
+            <section class="side front">
+              <div>
+                <div class="icon">🛰️</div>
+                <div class="title">MODIS</div>
+                <div class="subtitle">
+                  Moderate Resolution Imaging Spectroradiometer
+                </div>
+              </div>
+              <div class="content">
+                Scans the whole Earth every 1–2 days to monitor clouds, oceans,
+                land, vegetation, and fires.
+              </div>
+            </section>
+            <section class="side back">
+              <div>
+                <div class="icon">👁️</div>
+                <div class="title">What it measures</div>
+                <div class="subtitle">36 spectral bands • Global snapshots</div>
+                <p class="content">
+                  Provides frequent, wide-field observations for tracking fires,
+                  vegetation health, and sea surface changes.
+                </p>
+              </div>
+              <div>
+                <div class="fact">Fun fact: MODIS is Terra's global eye.</div>
+                <button
+                  class="learn-more-btn"
+                  aria-label="Learn more about MODIS"
+                >
+                  Learn More →
+                </button>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <!-- ASTER -->
+        <article class="card" data-sensor="aster">
+          <div
+            class="inner"
+            tabindex="0"
+            role="button"
+            aria-label="Flip ASTER card"
+          >
+            <section class="side front">
+              <div>
+                <div class="icon">🗺️</div>
+                <div class="title">ASTER</div>
+                <div class="subtitle">
+                  Advanced Spaceborne Thermal Emission and Reflection Radiometer
+                </div>
+              </div>
+              <div class="content">
+                High-resolution imaging to map mountains, volcanoes, glaciers,
+                deserts, and cities.
+              </div>
+            </section>
+            <section class="side back">
+              <div>
+                <div class="icon">🏔️</div>
+                <div class="title">What it measures</div>
+                <div class="subtitle">VNIR • SWIR • TIR bands</div>
+                <p class="content">
+                  Captures detailed terrain and thermal data used for 3D
+                  mapping, volcano monitoring, and glacier studies.
+                </p>
+              </div>
+              <div>
+                <div class="fact">
+                  Fun fact: ASTER built some of the most detailed land maps.
+                </div>
+                <button
+                  class="learn-more-btn"
+                  aria-label="Learn more about ASTER"
+                >
+                  Learn More →
+                </button>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <!-- MISR -->
+        <article class="card" data-sensor="misr">
+          <div
+            class="inner"
+            tabindex="0"
+            role="button"
+            aria-label="Flip MISR card"
+          >
+            <section class="side front">
+              <div>
+                <div class="icon">📐</div>
+                <div class="title">MISR</div>
+                <div class="subtitle">
+                  Multi-angle Imaging SpectroRadiometer
+                </div>
+              </div>
+              <div class="content">
+                Views Earth from 9 angles to study clouds, aerosols, and surface
+                texture.
+              </div>
+            </section>
+            <section class="side back">
+              <div>
+                <div class="icon">🌫️</div>
+                <div class="title">What it measures</div>
+                <div class="subtitle">
+                  Multi-angle reflectance & aerosol properties
+                </div>
+                <p class="content">
+                  Helps distinguish smoke, dust, and clouds to understand their
+                  effect on climate.
+                </p>
+              </div>
+              <div>
+                <div class="fact">
+                  Fun fact: MISR differentiates smoke and clouds by changing its
+                  viewpoint.
+                </div>
+                <button
+                  class="learn-more-btn"
+                  aria-label="Learn more about MISR"
+                >
+                  Learn More →
+                </button>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <!-- CERES -->
+        <article class="card" data-sensor="ceres">
+          <div
+            class="inner"
+            tabindex="0"
+            role="button"
+            aria-label="Flip CERES card"
+          >
+            <section class="side front">
+              <div>
+                <div class="icon">☀️</div>
+                <div class="title">CERES</div>
+                <div class="subtitle">
+                  Clouds and Earth's Radiant Energy System
+                </div>
+              </div>
+              <div class="content">
+                Measures how much sunlight Earth absorbs and reflects — tracking
+                the planet's energy balance.
+              </div>
+            </section>
+            <section class="side back">
+              <div>
+                <div class="icon">📐</div>
+                <div class="title">What it measures</div>
+                <div class="subtitle">Solar & thermal radiation</div>
+                <p class="content">
+                  Essential for studying the greenhouse effect and how clouds
+                  impact Earth's temperature.
+                </p>
+              </div>
+              <div>
+                <div class="fact">
+                  Fun fact: CERES keeps Earth's energy books balanced.
+                </div>
+                <button
+                  class="learn-more-btn"
+                  aria-label="Learn more about CERES"
+                >
+                  Learn More →
+                </button>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <!-- MOPITT -->
+        <article class="card" data-sensor="mopitt">
+          <div
+            class="inner"
+            tabindex="0"
+            role="button"
+            aria-label="Flip MOPITT card"
+          >
+            <section class="side front">
+              <div>
+                <div class="icon">🌫️</div>
+                <div class="title">MOPITT</div>
+                <div class="subtitle">
+                  Measurements of Pollution in the Troposphere
+                </div>
+              </div>
+              <div class="content">
+                Focuses on air quality — especially mapping global carbon
+                monoxide (CO) in the lower atmosphere.
+              </div>
+            </section>
+            <section class="side back">
+              <div>
+                <div class="icon">🔬</div>
+                <div class="title">What it measures</div>
+                <div class="subtitle">
+                  Tropospheric CO & pollution transport
+                </div>
+                <p class="content">
+                  Produces long-term CO maps that track pollution movement
+                  across continents.
+                </p>
+              </div>
+              <div>
+                <div class="fact">
+                  Fun fact: MOPITT tracks pollution plumes like weather
+                  patterns.
+                </div>
+                <button
+                  class="learn-more-btn"
+                  aria-label="Learn more about MOPITT"
+                >
+                  Learn More →
+                </button>
+              </div>
+            </section>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <script>
+      // Loading overlay
+      const loadingOverlay = document.getElementById("loadingOverlay");
+
+      // Hover flip controls
+      const cards = document.querySelectorAll(".card");
+      cards.forEach((card) => {
+        const inner = card.querySelector(".inner");
+
+        // Flip on hover (for inner div only, not button)
+        inner.addEventListener("mouseenter", () => {
+          card.classList.add("is-flipped");
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.classList.remove("is-flipped");
+        });
+
+        // Keyboard flip
+        inner.addEventListener("keydown", (e) => {
+          if (e.code === "Enter" || e.code === "Space") {
+            e.preventDefault();
+            card.classList.toggle("is-flipped");
+          }
+        });
+      });
+
+      // Navigation to detail pages
+      const learnMoreButtons = document.querySelectorAll(".learn-more-btn");
+      learnMoreButtons.forEach((button) => {
+        button.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent card flip
+          const card = button.closest(".card");
+          const sensor = card.getAttribute("data-sensor");
+
+          // Show loading overlay
+          loadingOverlay.classList.add("active");
+
+          // Navigate to the detail page after a brief delay for visual feedback
+          setTimeout(() => {
+            window.location.href = `${sensor}-detail.html`;
+          }, 800);
+        });
+      });
+
+      // Error handling for failed navigation
+      window.addEventListener("error", (e) => {
+        if (e.target.tagName === "A" || e.target.tagName === "BUTTON") {
+          loadingOverlay.classList.remove("active");
+          alert("Unable to load the requested page. Please try again.");
+        }
+      });
+    </script>
+  </body>
+</html>

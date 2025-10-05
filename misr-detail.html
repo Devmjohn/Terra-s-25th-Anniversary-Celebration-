@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" type="image/jpg" href="fav.jpg" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aerosol Visualization</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://raw.githubusercontent.com/mohammadhelaly/lunar-trek/master/globe-exploration/img/bg-star.png') repeat;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .header {
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .title-section h1 {
+    color: #ffd700;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+  }
+  .title-section p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+  }
+  .back-btn {
+    padding: 12px 28px;
+    background: #ffd700;
+    color: #1e3c72;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  }
+  .back-btn:hover {
+    background: #ffed4e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  }
+  .main-content {
+    padding: 50px;
+    position: relative;
+    z-index: 1;
+  }
+  .content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .about-section {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+  }
+  .about-section h2 {
+    color: #ffd700;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .about-section p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+  }
+  .about-section p:last-child {
+    margin-bottom: 0;
+  }
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 50px;
+  }
+  .spec-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 30px;
+    transition: all 0.3s ease;
+  }
+  .spec-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-5px);
+  }
+  .spec-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  .spec-card h3 {
+    color: #ffd700;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .spec-card p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  .video-tabs-section {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  .sidebar {
+    width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .tab {
+    padding: 18px 24px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .tab::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: #ffd700;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tab:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateX(5px);
+  }
+  .tab.active {
+    background: #ffd700;
+    color: #1e3c72;
+    border-color: #ffd700;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+  }
+  .tab.active::before {
+    opacity: 0;
+  }
+  .video-section {
+    flex: 1;
+    max-width: 1100px;
+  }
+  .video-container {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    aspect-ratio: 16/9;
+    width: 100%;
+  }
+  .video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: #000;
+  }
+  @media (max-width: 1200px) {
+    .video-tabs-section {
+      flex-direction: column;
+    }
+    .specs-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .main-content {
+      padding: 30px;
+    }
+    .about-section {
+      padding: 30px;
+    }
+    .sidebar {
+      width: 100%;
+      max-width: 600px;
+    }
+    .video-section {
+      width: 100%;
+    }
+    .header {
+      padding: 20px 30px;
+    }
+    .title-section h1 {
+      font-size: 2rem;
+    }
+  }
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .title-section h1 {
+      font-size: 1.75rem;
+    }
+    .title-section p {
+      font-size: 0.9rem;
+    }
+    .main-content {
+      padding: 20px;
+    }
+    .tab {
+      font-size: 0.95rem;
+      padding: 15px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <div class="icon">🛰️</div>
+      <div class="title-section">
+        <h1>MISR</h1>
+        <p>Multi-angle Imaging SpectroRadiometer</p>
+      </div>
+    </div>
+   <a href="sensors.html"> <button class="back-btn">← Back to Sensors</button></a>
+  </div>
+  
+  <div class="main-content">
+    <div class="content-wrapper">
+      <div class="about-section">
+        <h2>About MISR</h2>
+        <p>The Multi-angle Imaging SpectroRadiometer (MISR) is a scientific instrument aboard NASA's Terra satellite that views Earth with cameras pointed in nine different directions. MISR provides unique multi-angle imagery of Earth's surface and atmosphere, enabling detailed studies of aerosols, clouds, and surface properties.</p>
+        <p>MISR's distinctive capability to observe Earth from multiple angles allows scientists to distinguish different types of atmospheric particles, measure aerosol properties with high accuracy, and study cloud heights and structures. This data is crucial for understanding air quality, climate change, and the role of aerosols in Earth's radiation budget.</p>
+      </div>
+
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-icon">📐</div>
+          <h3>Multi-angle Viewing</h3>
+          <p>Nine cameras viewing at angles from 70.5° forward to 70.5° aftward along the flight path</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-icon">🌈</div>
+          <h3>Spectral Bands</h3>
+          <p>Four spectral bands: blue (446 nm), green (558 nm), red (672 nm), and near-infrared (866 nm)</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-icon">🔍</div>
+          <h3>Spatial Resolution</h3>
+          <p>275 m to 1.1 km depending on camera angle, with 360 km swath width</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-icon">🌐</div>
+          <h3>Coverage</h3>
+          <p>Global coverage every 9 days at the equator, more frequent at higher latitudes</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-icon">🎯</div>
+          <h3>Applications</h3>
+          <p>Aerosol characterization, air quality monitoring, cloud studies, surface mapping, wildfire tracking</p>
+        </div>
+        <div class="spec-card">
+          <div class="spec-icon">🛰️</div>
+          <h3>Mission Duration</h3>
+          <p>Launched December 1999 aboard Terra satellite, still operational</p>
+        </div>
+      </div>
+
+      <div class="video-tabs-section">
+        <div class="sidebar">
+          <div class="tab active" data-video="https://youtube.com/embed/vqzcfZjPluM">
+            Aerosol Size Distribution
+          </div>
+        </div>
+        
+        <div class="video-section">
+          <div class="video-container">
+            <iframe src="https://youtube.com/embed/vqzcfZjPluM" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const iframe = document.querySelector('.video-container iframe');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const newSrc = tab.getAttribute('data-video');
+        iframe.style.opacity = '0';
+        iframe.style.transition = 'opacity 0.3s';
+        
+        setTimeout(() => {
+          iframe.src = newSrc;
+          setTimeout(() => {
+            iframe.style.opacity = '1';
+          }, 100);
+        }, 300);
+      });
+    });
+  </script>
+</body>
+</html>

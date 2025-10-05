@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpg" href="fav.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terra the Satellite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+
+  <body class="min-h-screen flex flex-col space-y-16 md:space-y-24">
+    <!-- Navbar -->
+<header class="sticky top-0 z-50 backdrop-blur-md text-white p-4 flex justify-between items-center space-x-6 shadow-md">
+  <div class="flex items-center">
+    <img
+      src="logo.png"
+      alt="Terra Logo"
+      class="h-16 md:h-20 w-auto object-contain"
+    />
+  </div>
+
+  <nav class="hidden md:flex space-x-10">
+    <a href="#section2" class="hover:text-yellow-400 text-lg transition-colors duration-300">About</a>
+    <a href="#section1" class="hover:text-yellow-400 text-lg transition-colors duration-300">Details</a>
+    <a href="sensors.html" class="hover:text-yellow-400 text-lg transition-colors duration-300">Sensors</a>
+  </nav>
+</header>
+
+
+      <div class="md:hidden">
+        <button id="menu-btn" class="focus:outline-none">
+          <svg
+            class="w-10 h-10"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div
+      id="menu"
+      class="hidden bg-black bg-opacity-80 text-white flex flex-col items-center space-y-4 py-4 md:hidden"
+    >
+      <a href="#section2" class="text-lg">About</a>
+      <a href="#section1" class="text-lg">Details</a>
+      <a href="sensors.html" class="text-lg">Sensors</a>
+    </div>
+
+    <!-- Hero Section -->
+    <main
+      class="flex-1 flex flex-col items-center justify-center text-center relative space-y-10 md:space-y-14 px-4"
+    >
+      <h1 class="text-white text-3xl md:text-9xl font-bold">
+        Terra the Satellite
+      </h1>
+
+      <!-- Earth and Orbit -->
+      <div
+        class="relative -mt-16 flex justify-center items-center mb-16 md:mb-20 w-full"
+      >
+        <div
+          class="orbit-container relative w-[70vw] max-w-[700px] aspect-square"
+        >
+          <!-- Earth -->
+          <img
+            src="earth.png"
+            alt="Earth"
+            class="earth absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%] md:w-[70%] lg:w-[80%] h-auto rounded-full"
+          />
+          <!-- Orbit -->
+          <div
+            class="orbit absolute top-1/2 left-1/2 w-full aspect-square rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-rotate"
+          >
+            <img
+              src="terra.png"
+              alt="Satellite"
+              class="satellite w-[12%] md:w-[14%] lg:w-[16%] absolute top-0 left-1/2 transform -translate-x-1/2"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Explore Button -->
+      
+<div class="flex flex-col items-center space-y-6 mt-10">
+    <button class="btn-universe">Explore Story</button>
+  </div>
+
+  <div id="characterContainer">
+    <div id="chatBox">
+      <p id="chatMessage"></p>
+      <div class="nav-controls">
+        <button id="prevBtn" class="nav-btn">◀</button>
+        <span id="counter">1/13</span>
+        <button id="nextBtn" class="nav-btn">▶</button>
+      </div>
+    </div>
+    <img id="character" src="buzz.png" alt="Character">
+  </div>
+
+  <div id="mobileWarning">
+    <h3>📱 Desktop Only</h3>
+    <p>The interactive story mode is optimized for larger screens. Please view this on a desktop or tablet for the best experience!</p>
+    <button id="closeWarning">Got it</button>
+  </div>
+
+
+    </main>
+
+    <!-- About Terra -->
+    <section id="section2" class="bg-violet-700 text-white py-20 px-10 md:px-24">
+      <div
+        class="flex flex-col md:flex-row items-center justify-between gap-10 max-w-7xl mx-auto"
+      >
+        <div class="flex-1 text-center md:text-left space-y-6">
+          <h2 class="text-4xl md:text-6xl font-bold mb-2">About Terra</h2>
+          <p class="text- md:text-xl leading-relaxed">
+            Terra, launched in 1999, is a pioneering NASA satellite dedicated to studying our home planet. Orbiting Earth in a sun-synchronous path, it carries five powerful instruments that work together to observe land, water, ice, clouds, and the energy balance that drives our climate. For 25 years, Terra has monitored wildfires, volcanic eruptions, melting glaciers, and changing forests, providing data that helps scientists, policymakers, and communities worldwide. Originally designed for a 6-year mission, Terra continues to serve as one of the longest-running and most impactful Earth science missions ever</p>
+        </div>
+        <div class="flex-1 flex justify-center">
+          <img
+            src="terra.png"
+            alt="Satellite"
+            class="w-[70%] max-w-[450px] drop-shadow-2xl"
+          />
+        </div>
+      </div>
+    </section>
+      <section id="section1" class="flashcards">
+    <section class="py-20 px-6">
+  <div class="max-w-7xl mx-auto text-center mb-10">
+    <h2 class="text-3xl md:text-4xl font-bold text-[#FEE12B] mb-4">Explore Terra Features</h2>
+    <p class="text-white/80 text-lg">Discover our cutting-edge modules and interactive experiences</p>
+  </div>
+
+    <div class="grid">
+      <!-- MODIS -->
+      <article class="card" data-sensor="modis">
+        <div class="inner">
+          <section class="side front">
+            <div>
+              <div class="icon">🛰️</div>
+              <div class="title">MODIS</div>
+              <div class="subtitle">Moderate Resolution Imaging Spectroradiometer</div>
+            </div>
+            <div class="content">
+              Scans the whole Earth every 1–2 days to monitor clouds, oceans, land, vegetation, and fires.
+            </div>
+          </section>
+          <section class="side back">
+            <div>
+              <div class="icon">👁️</div>
+              <div class="title">What it measures</div>
+              <div class="subtitle">36 spectral bands • Global snapshots</div>
+              <p class="content">
+                Tracks fires, vegetation, and sea surface changes with frequent global coverage.
+              </p>
+            </div>
+            <div class="fact">Fun fact: MODIS is Terra's global eye.</div>
+          </section>
+        </div>
+      </article>
+
+      <!-- ASTER -->
+      <article class="card" data-sensor="aster">
+        <div class="inner">
+          <section class="side front">
+            <div>
+              <div class="icon">🗺️</div>
+              <div class="title">ASTER</div>
+              <div class="subtitle">Advanced Thermal Emission and Reflection Radiometer</div>
+            </div>
+            <div class="content">
+              High-res imaging to map mountains, volcanoes, glaciers, and cities.
+            </div>
+          </section>
+          <section class="side back">
+            <div>
+              <div class="icon">🏔️</div>
+              <div class="title">What it measures</div>
+              <div class="subtitle">VNIR • SWIR • TIR bands</div>
+              <p class="content">
+                Creates 3D terrain maps and monitors volcanoes and glaciers.
+              </p>
+            </div>
+            <div class="fact">Fun fact: ASTER built detailed global land maps.</div>
+          </section>
+        </div>
+      </article>
+
+      <!-- MISR -->
+      <article class="card" data-sensor="misr">
+        <div class="inner">
+          <section class="side front">
+            <div>
+              <div class="icon">📐</div>
+              <div class="title">MISR</div>
+              <div class="subtitle">Multi-angle Imaging SpectroRadiometer</div>
+            </div>
+            <div class="content">
+              Views Earth from 9 angles to study clouds, aerosols, and surface texture.
+            </div>
+          </section>
+          <section class="side back">
+            <div>
+              <div class="icon">🌫️</div>
+              <div class="title">What it measures</div>
+              <div class="subtitle">Multi-angle reflectance</div>
+              <p class="content">
+                Helps distinguish smoke, dust, and clouds and their impact on climate.
+              </p>
+            </div>
+            <div class="fact">Fun fact: MISR spots smoke from different angles!</div>
+          </section>
+        </div>
+      </article>
+
+      <!-- CERES -->
+      <article class="card" data-sensor="ceres">
+        <div class="inner">
+          <section class="side front">
+            <div>
+              <div class="icon">☀️</div>
+              <div class="title">CERES</div>
+              <div class="subtitle">Clouds and Earth's Radiant Energy System</div>
+            </div>
+            <div class="content">
+              Measures how much sunlight Earth absorbs and reflects.
+            </div>
+          </section>
+          <section class="side back">
+            <div>
+              <div class="icon">📐</div>
+              <div class="title">What it measures</div>
+              <div class="subtitle">Solar & thermal radiation</div>
+              <p class="content">
+                Studies greenhouse effect and cloud impact on Earth's temperature.
+              </p>
+            </div>
+            <div class="fact">Fun fact: CERES balances Earth's energy books!</div>
+          </section>
+        </div>
+      </article>
+
+      <!-- MOPITT -->
+      <article class="card" data-sensor="mopitt">
+        <div class="inner">
+          <section class="side front">
+            <div>
+              <div class="icon">🌫️</div>
+              <div class="title">MOPITT</div>
+              <div class="subtitle">Measurements of Pollution in the Troposphere</div>
+            </div>
+            <div class="content">
+              Focuses on air quality — mapping global carbon monoxide (CO) in the atmosphere.
+            </div>
+          </section>
+          <section class="side back">
+            <div>
+              <div class="icon">🔬</div>
+              <div class="title">What it measures</div>
+              <div class="subtitle">Tropospheric CO & pollution</div>
+              <p class="content">
+                Produces long-term CO maps to track pollution movement.
+              </p>
+            </div>
+            <div class="fact">Fun fact: MOPITT tracks pollution plumes like weather!</div>
+          </section>
+        </div>
+      </article>
+        
+    </div>
+  </section>
+<footer>
+    Made with <span class="heart">❤</span> by Meta Galactic
+  </footer>
+    <script>
+      // Flashcard Navigation Script
+      document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach(card => {
+          const inner = card.querySelector('.inner');
+          
+          // Add click event to navigate to detail pages
+          inner.addEventListener('click', function(e) {
+            const sensor = card.getAttribute('data-sensor');
+            if (sensor) {
+              // Navigate to the sensor detail page
+              window.location.href = `${sensor}-detail.html`;
+            }
+          });
+
+          // Add hover effect with cursor pointer
+          inner.style.cursor = 'pointer';
+          
+          // Optional: Add keyboard navigation
+          inner.setAttribute('tabindex', '0');
+          inner.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const sensor = card.getAttribute('data-sensor');
+              if (sensor) {
+                window.location.href = `${sensor}-detail.html`;
+              }
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

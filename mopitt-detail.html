@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" type="image/jpg" href="fav.jpg" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MOPITT - Terra Sensor Details</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Arial, sans-serif;
+    background: linear-gradient(135deg, #0f2557 0%, #1e4d8b 50%, #0f2557 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #fff;
+  }
+  .header {
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+  }
+  .title-section h1 {
+    color: #ffd700;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+  .title-section p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.05rem;
+  }
+  .back-btn {
+    padding: 12px 28px;
+    background: #ffd700;
+    color: #0f2557;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+  }
+  .back-btn:hover {
+    background: #ffed4e;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  }
+  .content-wrapper {
+    padding: 40px 50px;
+  }
+  .about-section {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 40px;
+    margin-bottom: 40px;
+  }
+  .about-section h2 {
+    color: #ffd700;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+  }
+  .about-section p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+  .info-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 30px;
+    transition: all 0.3s;
+  }
+  .info-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-5px);
+  }
+  .info-card-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  .info-card h3 {
+    color: #ffd700;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .info-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .video-section-title {
+    color: #ffd700;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+  }
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+  }
+  .video-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 215, 0, 0.3);
+  }
+  .video-container {
+    aspect-ratio: 16/9;
+    background: #000;
+  }
+  .video-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  .video-info {
+    padding: 20px;
+  }
+  .video-info h3 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .video-info p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+  }
+  @media (max-width: 1200px) {
+    .content-wrapper {
+      padding: 30px;
+    }
+    .header {
+      padding: 20px 30px;
+    }
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .header-left {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .title-section h1 {
+      font-size: 2rem;
+    }
+    .title-section p {
+      font-size: 0.95rem;
+    }
+    .content-wrapper {
+      padding: 20px;
+    }
+    .about-section {
+      padding: 25px;
+    }
+    .about-section h2 {
+      font-size: 1.6rem;
+    }
+    .info-cards {
+      grid-template-columns: 1fr;
+    }
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <div class="icon">🗺️</div>
+      <div class="title-section">
+        <h1>MOPITT</h1>
+        <p>Measurements of Pollution in the Troposphere</p>
+      </div>
+    </div>
+    <a href="sensors.html"><button class="back-btn">← Back to Sensors</button></a>
+  </div>
+  
+  <div class="content-wrapper">
+    <div class="about-section">
+      <h2>About MOPITT</h2>
+      <p>
+        The Measurements of Pollution in the Troposphere (MOPITT) is a Canadian instrument aboard NASA's Terra satellite. MOPITT measures atmospheric carbon monoxide (CO) and methane (CH4) concentrations in the troposphere, providing crucial data for understanding air quality, atmospheric chemistry, and climate patterns.
+      </p>
+      <p>
+        Since its launch in 1999, MOPITT has been monitoring pollution transport, biomass burning emissions, and urban air quality on a global scale. This long-term dataset helps scientists track pollution trends, validate atmospheric models, and assess the impact of human activities on air quality and climate change.
+      </p>
+    </div>
+
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon">📡</div>
+        <h3>Spectral Bands</h3>
+        <p>Thermal infrared at 4.7 μm for CO detection with high sensitivity to pollution in the lower troposphere</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">🔬</div>
+        <h3>Resolution</h3>
+        <p>22 km × 22 km horizontal resolution with vertical profiling capability through the troposphere</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">🌍</div>
+        <h3>Coverage</h3>
+        <p>Global coverage every 3 days with continuous monitoring of atmospheric composition</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">🎯</div>
+        <h3>Applications</h3>
+        <p>Air quality monitoring, biomass burning detection, pollution transport tracking, climate research</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">🚀</div>
+        <h3>Mission Duration</h3>
+        <p>Launched December 1999 aboard Terra satellite, still operational with over 25 years of data</p>
+      </div>
+    </div>
+
+    <h2 class="video-section-title">MOPITT Data Visualizations</h2>
+    
+    <div class="video-grid">
+      <div class="video-card">
+        <div class="video-container">
+          <iframe src="https://youtube.com/embed/DIMKMRV1IBw" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        </div>
+        <div class="video-info">
+          <h3>Carbon Monoxide Distribution</h3>
+          <p>Global visualization of CO concentrations in the troposphere</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
